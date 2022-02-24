@@ -206,7 +206,9 @@ export class TestComponent implements OnInit {
       }
     }
 
-
+    onSubmit(): void {
+      console.log(this.AdForm)
+    }
 
 
   }

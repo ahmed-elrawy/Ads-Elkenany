@@ -36,7 +36,7 @@
             <mat-card>
                 <mat-card-content>
                     <div class="form__container">
-                        <form  [formGroup]="AdForm" dir="rtl">
+                        <form  [formGroup]="AdForm" dir="rtl"(ngSubmit)="onSubmit()">
 
                             <div class="col-12">
                                 <mat-form-field appearance="outline" class="w-100">
@@ -269,10 +269,19 @@
                                     </div>
                                 </div>
 
-
+                           
 
                             </div>
-                              <!-- end of schedule -->               
+                              <!-- end of schedule -->    
+                              <div class="col-12 text-center">
+                                <button
+                                
+                                  class="auth__btn--submit"
+                                  mat-raised-button
+                                  type="submit">
+                                  إنشاء الإعلان
+                                </button>
+                              </div>           
                         </form>
                     </div>
                 </mat-card-content>
