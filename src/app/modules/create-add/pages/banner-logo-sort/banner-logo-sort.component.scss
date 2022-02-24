@@ -1,0 +1,17 @@
+@import "src/assets/styles/base/placeholders";
+
+.actions__container {
+  width: 100%;
+  text-align: center;
+  @include flex(center, center, row, nowrap);
+
+  .next__btn {
+    @extend %btn__main;
+
+  }
+}
+
+.tab__title {
+  font-size: $fs-18;
+  color: $mainColor;
+}

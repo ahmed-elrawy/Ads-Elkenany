@@ -1,0 +1,26 @@
+@import "src/assets/styles/base/placeholders";
+
+.page__title {
+  font-size: $fs-32;
+  color: $mainColor;
+  font-weight: $fw-bold;
+  margin: 1rem auto 2rem auto;
+  text-align: center;
+}
+
+
+:host::ng-deep {
+  .mat-card-title {
+    font-size: $fs-24;
+    color: $mainColor;
+    font-weight: $fw-bold;
+  }
+
+  .mat-card-header, .mat-card-header-text {
+    width: 100% !important;
+  }
+
+  .mat-card {
+    margin-bottom: 1.5rem;
+  }
+}

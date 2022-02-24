@@ -1,0 +1,28 @@
+@import "src/assets/styles/abstracts/variables";
+/* -------Square Loading Spinner------ */
+
+
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  @include flex(center, center, row, nowrap);
+  z-index: 99999;
+  background: $color-white;
+
+  span {
+    background-color: $color-white;
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    border-radius: $rd-circle;
+  }
+
+  .loading__logo {
+    width: auto;
+    max-width: 300px;
+    height: auto;
+  }
+}

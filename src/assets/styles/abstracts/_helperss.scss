@@ -1,0 +1,80 @@
+@import "variables";
+@import "../base/placeholders";
+
+/* ****************************Our Helper Classes****************************** */
+.page__title {
+  font-weight: $fw-bold;
+  font-size: $fs-28;
+  color: $mainColor;
+  text-align: center;
+  margin: 2rem auto;
+  text-transform: capitalize;
+}
+
+.our-font-color {
+  color: $fontColor !important;
+}
+
+.our-text-primary {
+  color: $mainColor !important;
+
+}
+
+.p__title {
+  opacity: 0.6;
+  font-weight: $fw-regular;
+}
+
+.vertical-baseline {
+  vertical-align: baseline !important;
+}
+
+%our__button {
+  border: 1px solid $semi-gray;
+  background: $semi-gray;
+  font-size: $fs-16;
+  font-weight: $fw-bold;
+  color: $color-white;
+  padding: 0.5rem 1rem;
+  border-radius: $rd-32;
+  width: auto;
+  transition: $transition-300ms;
+  position: relative;
+}
+
+@mixin our-btn-colors($color,$color-hover) {
+  border: 1px solid $color;
+  background: $color;
+
+  &:hover {
+    background: $color-hover;
+    color: $color;
+  }
+}
+
+.our__button {
+  @extend %our__button;
+
+  &.red__button {
+    @include our-btn-colors($redColor, $color-white);
+  }
+
+  &.yellow__button {
+    @include our-btn-colors($mainColor, $color-white);
+  }
+}
+
+.note__container {
+  margin-bottom: 0.8rem;
+
+  .note__title {
+    opacity: 0.5;
+    font-weight: $fw-bold;
+    font-size: $fs-18;
+  }
+
+  .note__body {
+    color: $secColor;
+    font-size: $fs-18;
+  }
+}

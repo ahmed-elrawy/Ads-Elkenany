@@ -1,0 +1,94 @@
+@import "src/assets/styles/abstracts/variables";
+
+%knany_table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 5em;
+  text-align: center;
+  margin: auto auto 3rem;
+
+  .example-element-row td {
+    border-bottom-width: 0;
+  }
+
+  ::ng-deep tr.mat-header-row {
+    border: 1px solid $semi-gray;
+    background: $mainColor;
+    color: $color-white;
+    text-align: center;
+    height: 51px;
+  }
+
+  ::ng-deep .mat-header-cell {
+    color: $color-white;
+    text-align: center;
+    font-size: $fs-18;
+    font-weight: $fw-medium;
+  }
+
+  ::ng-deep .mat-cell {
+    font-size: $fs-16;
+  }
+
+  th {
+    border-bottom: 1px solid $semi-gray;
+    border-top: 1px solid $semi-gray;
+  }
+
+  th.mat-header-cell, td.mat-footer-cell {
+    text-align: center;
+  }
+
+  .mat-row {
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .mat-cell {
+    border: 1px solid $semi-gray;
+    align-self: stretch;
+  }
+
+  table tr:last-child td /*To remove the last border*/
+  {
+    border-bottom: 0 solid
+  }
+
+  tr.example-detail-row {
+    height: 0;
+  }
+
+  tr.example-element-row:not(.example-expanded-row):hover {
+    background: whitesmoke;
+  }
+
+  tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+  }
+
+  td.mat-cell {
+    border: 1px solid $semi-gray;
+  }
+
+  tr.mat-row {
+    border: 1px solid $semi-gray;
+  }
+}
+
+%inner__table__element-detail {
+  overflow: hidden;
+  background-color: $background-color-gray-light;
+  display: flex;
+
+  .mat-card {
+    margin: 1rem auto;
+    width: 98%;
+
+    ::ng-deep .mat-card-header-text {
+      width: 100%;
+    }
+
+    .mat-card-content {
+    }
+  }
+}

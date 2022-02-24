@@ -1,0 +1,33 @@
+@import "../abstracts/variables";
+
+%btn__main {
+  background-color: $mainColor;
+  color: $font-color-main;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 4px 5px #ddd;
+  transition: $transition-200ms;
+  min-width: 125px;
+  width: auto;
+  @include flex(center, center, row, nowrap);
+  text-align: center;
+  border-radius: $fs-20;
+  padding: 0.8rem 1rem;
+  margin: auto;
+
+  &:hover {
+    background-color: $font-color-main;
+    color: $mainColor;
+  }
+
+  &.disabled__btn {
+    pointer-events: none;
+  }
+
+  &.gray__btn {
+    background-color: $color-gray-3;
+    color: $fontColor;
+  }
+
+}

@@ -1,0 +1,48 @@
+@import "../abstracts/variables";
+/* ****************************Scroll BAR****************************** */
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: $background-color-gray-light;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $mainColor;
+  border-radius: $rd-10;
+  //box-shadow: inset 2px 0 2px $lightBlack, inset -2px -2px 2px $lightBlack;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(#f77d0e, 0.7);
+}
+
+/* ****************************Scroll BAR****************************** */
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.owl-nav {
+  display: none;
+}
+
+.owl-dots {
+  @include flex(center, center, row, nowrap);
+
+  margin: auto;
+  width: 100%;
+}

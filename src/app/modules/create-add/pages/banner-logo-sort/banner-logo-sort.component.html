@@ -1,0 +1,147 @@
+<div class="container my-2">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="page__title">إنشاء إعلان</h1>
+    </div>
+    <div class="col-12">
+      <mat-card>
+        <mat-card-content>
+          <div *ngIf="type === 'banner' || type === 'logo'" class="col-12">
+            <h2 class="tab__title">اختر نوع الإعلان</h2>
+            <mat-radio-group
+              [(ngModel)]="isMain"
+              aria-labelledby="example-radio-group-label"
+              class="d-flex justify-content-center align-items-center"
+              color="primary">
+              <mat-radio-button [value]="1" class="example-radio-button mx-2">
+                رئيسى
+              </mat-radio-button>
+              <mat-radio-button [value]="0" class="example-radio-button mx-2">
+                فرغي
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <!--    FOR CHOOSE SelectedPlace      -->
+          <div class="col-12">
+            <h2 class="tab__title">مكان الإعلان</h2>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>اختر مكان الإعلان</mat-label>
+              <!--      if MAIN         -->
+              <mat-select (selectionChange)="TypePlaceChange($event)" *ngIf="isMain === 1" [(ngModel)]="selectedPlace">
+                <ng-container *ngFor="let place of AllPlaces">
+                  <mat-option *ngIf="place?.type !== 'fodderstock'" [value]="place.type">
+                    {{place.name}}
+                  </mat-option>
+                </ng-container>
+                <mat-option *ngIf="type === 'logo'" [value]="'home'">
+                  الصفحة الرئيسية
+                </mat-option>
+              </mat-select>
+              <!--      if SUB AND SORT         -->
+              <mat-select (selectionChange)="TypePlaceChange($event)" *ngIf="isMain === 0 && type === 'sort'"
+                          [(ngModel)]="selectedPlace">
+                <ng-container *ngFor="let place of AllPlaces">
+                  <mat-option
+                    *ngIf="place?.type === 'guide' || place?.type === 'localstock' || place?.type === 'fodderstock'"
+                    [value]="place.type">
+                    {{place.name}}
+                  </mat-option>
+                </ng-container>
+              </mat-select>
+              <!--      if SUB AND ( BANNER OR LOGO )         -->
+              <mat-select (selectionChange)="TypePlaceChange($event)"
+                          *ngIf="isMain === 0 && (type === 'banner' ||type === 'logo')" [(ngModel)]="selectedPlace">
+                <ng-container *ngFor="let place of AllPlaces">
+                  <mat-option *ngIf="place?.type !== 'magazines'" [value]="place.type">
+                    {{place.name}}
+                  </mat-option>
+                </ng-container>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!--    IF SelectedPlace   === 'ships'    -->
+          <section *ngIf="selectedPlace === 'ships' || selectedPlace === 'home' ">
+            <div class="col-12">
+              <div class="actions__container">
+                <button (click)="GotoForm(true)"
+                        class="next__btn">التالي
+                </button>
+              </div>
+            </div>
+          </section>
+          <!--    IF SelectedPlace   !== 'ships'    -->
+          <section *ngIf="selectedPlace &&  selectedPlace !== ''
+                       && selectedPlace !== 'ships' && selectedPlace !== 'home' ">
+            <div class="col-12">
+              <h2 class="tab__title">اختر القطاع</h2>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>اختر القطاع</mat-label>
+                <mat-select (selectionChange)="SectionChange($event)" [(ngModel)]="selectedSection">
+                  <ng-container *ngIf="AllSections !== null">
+                    <mat-option *ngFor="let section of (AllSections|async)?.sections" [value]="section.type">
+                      {{section.name}}
+                    </mat-option>
+                  </ng-container>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div *ngIf="selectedSection !== '' && isMain === 0 && selectedSection" class="col-12">
+              <section
+                *ngIf="selectedPlace === 'guide' || selectedPlace === 'localstock'  || selectedPlace === 'fodderstock'">
+                <h2 class="tab__title">اختر القسم الفرعى</h2>
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>اختر القسم الفرعى</mat-label>
+                  <mat-select (selectionChange)="SelectedSubSection($event)" [(ngModel)]="selectedSubSection">
+                    <ng-container *ngIf="AllSubSections !== null">
+                      <mat-option *ngFor="let subSection of (AllSubSections|async)?.sub_sections"
+                                  [value]="subSection.id">
+                        {{subSection.name}}
+                      </mat-option>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </section>
+              <section *ngIf="selectedPlace === 'store' || selectedPlace === 'news' || selectedPlace === 'shows' ">
+                <h2 class="tab__title">إظهار الإعلان فى الرئيسية</h2>
+                <mat-radio-group
+                  [(ngModel)]="check"
+                  aria-labelledby="example-radio-group-label"
+                  class="d-flex justify-content-center align-items-center"
+                  color="primary">
+                  <mat-radio-button [value]="1" class="example-radio-button mx-2">
+                    نعم
+                  </mat-radio-button>
+                  <mat-radio-button [value]="0" class="example-radio-button mx-2">
+                    لا
+                  </mat-radio-button>
+                </mat-radio-group>
+              </section>
+            </div>
+          </section>
+        </mat-card-content>
+        <mat-card-actions>
+          <div *ngIf="selectedPlace !== 'ships' && selectedPlace !== 'home' " class="actions__container">
+            <button
+              (click)="GotoForm()"
+              [disabled]="selectedPlace === '' || selectedSection === ''"
+              [ngClass]="{'disabled__btn gray__btn': selectedPlace === '' || selectedSection === ''}"
+              class="next__btn">
+              التالي
+            </button>
+          </div>
+          <!--          <div *ngIf="selectedPlace !== 'ships' && type === 'sort'" class="actions__container">-->
+          <!--            <button-->
+          <!--              (click)="SubmitAdData()"-->
+          <!--              [class.spinner]="loading"-->
+          <!--              [disabled]="loading"-->
+          <!--              [ngClass]="{'disabled__btn gray__btn': loading }"-->
+          <!--              class="next__btn position-relative">-->
+          <!--              التالي-->
+          <!--            </button>-->
+          <!--          </div>-->
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>
+

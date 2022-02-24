@@ -1,0 +1,104 @@
+/* For use in src/lib/core/theming/_palette.scss */
+$md-primarycolors: (
+  /* For use in src/lib/core/theming/_palette.scss */
+  50 : #e4ede0,
+  100 : #bcd3b3,
+  200 : #8fb580,
+  300 : #62974d,
+  400 : #418126,
+  500 : #1f6b00,
+  600 : #1b6300,
+  700 : #175800,
+  800 : #124e00,
+  900 : #0a3c00,
+  A100 : #7cff72,
+  A200 : #4cff3f,
+  A400 : #1cff0c,
+  A700 : #10f100,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #ffffff,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+
+/* For use in src/lib/core/theming/_palette.scss */
+$md-seconderycolors: (
+  50 : #fff5e0,
+  100 : #ffe6b3,
+  200 : #ffd580,
+  300 : #ffc44d,
+  400 : #ffb726,
+  500 : #ffaa00,
+  600 : #ffa300,
+  700 : #ff9900,
+  800 : #ff9000,
+  900 : #ff7f00,
+  A100 : #ffffff,
+  A200 : #fff8f2,
+  A400 : #ffdcbf,
+  A700 : #ffcda6,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #000000,
+    600 : #000000,
+    700 : #000000,
+    800 : #000000,
+    900 : #000000,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+/* For use in src/lib/core/theming/_palette.scss */
+$md-thirdcolors: (
+  50 : #f9e4e7,
+  100 : #f0bdc3,
+  200 : #e6919c,
+  300 : #dc6474,
+  400 : #d54356,
+  500 : #cd2238,
+  600 : #c81e32,
+  700 : #c1192b,
+  800 : #ba1424,
+  900 : #ae0c17,
+  A100 : #ffdbdd,
+  A200 : #ffa8ad,
+  A400 : #ff757c,
+  A700 : #ff5c64,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+

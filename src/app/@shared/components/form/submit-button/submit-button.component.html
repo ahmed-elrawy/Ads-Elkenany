@@ -1,0 +1,11 @@
+<button
+  [class.disabled__btn]="form.untouched || form.invalid || loading"
+  [class.spinner]="loading"
+  [disabled]="form.untouched || form.invalid || loading"
+  [ngStyle]="{'cursor':form.untouched|| form.invalid || loading ? 'not-allowed':'pointer'  }"
+  class="auth__btn--submit"
+  mat-raised-button
+  type="submit">
+  {{title}}
+</button>
+<!--[class.auth__button__active]="form.valid && form.dirty && !loading"-->

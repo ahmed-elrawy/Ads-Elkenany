@@ -1,0 +1,60 @@
+@import "src/assets/styles/base/placeholders";
+
+.auth__btn--submit {
+  @extend %btn__main;
+}
+
+.pics__sizes__container {
+  @include flex(flex-start, flex-start, column);
+  border: 1px solid $mainColor;
+  border-radius: $rd-8;
+  padding: 1rem;
+  margin: 1rem auto 2rem auto;
+
+  .pics__banner, .pics__logo {
+    @include flex(flex-start, flex-start, column);
+    width: 100%;
+
+    .header {
+      @include flex(center, flex-start, row);
+
+      .icon {
+        svg {
+          fill: $mainColor
+        }
+      }
+
+      .title {
+        font-size: $fs-18;
+        margin-inline: 0.5rem;
+        font-weight: $fw-semiBold;
+        color: $mainColor;
+      }
+    }
+
+    .body {
+      .category {
+        margin: 0.5rem auto;
+        text-align: start;
+        padding: 0 2rem;
+
+        .cat__title {
+          font-size: $fs-18;
+          font-weight: 500;
+          color: $mainColor;
+        }
+
+        ul {
+          li {
+            font-size: $fs-16;
+            color: $lightBlack;
+
+            &::marker {
+              color: $lightBlack;
+            }
+          }
+        }
+      }
+    }
+  }
+}

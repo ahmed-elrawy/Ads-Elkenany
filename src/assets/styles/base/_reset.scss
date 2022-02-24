@@ -1,0 +1,43 @@
+@import "../abstracts/variables";
+
+html, body {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline: none !important;
+  scroll-behavior: smooth;
+  line-height: normal;
+  font-family: $font-family;
+}
+
+body {
+  margin: 0;
+  font-family: $font-family;
+  background-color: $color-white;
+  overflow-x: hidden;
+  color: $fontColor;
+  scroll-behavior: smooth;
+}
+
+*::selection {
+  background: $secColor;
+  color: $mainColor;
+
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+ol, ul {
+  padding-left: 0;
+  margin-bottom: 0;
+}

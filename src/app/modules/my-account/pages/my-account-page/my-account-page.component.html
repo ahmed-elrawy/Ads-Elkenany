@@ -1,0 +1,32 @@
+<app-loader *ngIf="loading"></app-loader>
+<section *ngIf="!loading">
+  <div class="container my-2">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="page__title">الأعلانات</h1>
+      </div>
+      <div class="col-12">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>اختر الشركة</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>اختر الشركة</mat-label>
+              <mat-select (selectionChange)="CompanyChange($event)" [(ngModel)]="SelectedCompany" name="food">
+                <ng-container *ngIf="(AllCompanies|getLength) > 0">
+                  <mat-option *ngFor="let company of AllCompanies" [value]="company">
+                    {{company.name}}
+                  </mat-option>
+                </ng-container>
+              </mat-select>
+            </mat-form-field>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div *ngIf="AllAds|async ; let allAds" class="col-12">
+        <app-ads-table [AllAds]="allAds"></app-ads-table>
+      </div>
+    </div>
+  </div>
+</section>

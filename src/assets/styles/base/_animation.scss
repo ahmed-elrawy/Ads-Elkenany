@@ -1,0 +1,27 @@
+@import "../abstracts/variables";
+
+/* ****************************Submit Form Button Loader****************************** */
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner:before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 48%;
+  width: 35px;
+  height: 35px;
+  margin-top: -16px;
+  margin-left: -10px;
+  border-radius: $rd-circle;
+  border: 3px solid $color-white;
+  border-top-color: $lightBlack;
+  animation: spinner 0.8s linear infinite;
+}
+
+

@@ -1,0 +1,45 @@
+@import "src/assets/styles/base/placeholders";
+
+.header {
+  h1 {
+    color: $fontColor;
+    font-size: $fs-24;
+  }
+}
+
+.header2 {
+  h1 {
+    color: $mainColor;
+    font-size: $fs-20;
+  }
+}
+
+.header::first-letter,
+.dialog-message::first-letter {
+  text-transform: uppercase;
+}
+
+.example-button-row {
+  width: 100%;
+  @include flex(center, space-between, row);
+}
+
+@include media-breakpoint-down(sm) {
+  .example-button-row {
+    flex-flow: column-reverse;
+
+    button {
+      margin: 0.2rem auto;
+      width: 80%;
+    }
+  }
+}
+
+a {
+  color: $mainColor;
+  text-transform: none;
+}
+
+
+
+

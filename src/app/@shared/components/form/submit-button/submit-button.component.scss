@@ -1,0 +1,6 @@
+@import "src/assets/styles/base/placeholders";
+
+.auth__btn--submit {
+  @extend %btn__main;
+}
+
