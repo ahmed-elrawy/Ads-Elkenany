@@ -10,7 +10,6 @@ import {NameFilterPipe} from '@shared/pipes/name-filter.pipe';
 import {DialogueComponent} from '@shared/components/dialouge/dialogue.component';
 import {GetStatusPipe} from '@shared/pipes/get-status.pipe';
 import {IncludesPipe} from '@shared/pipes/includes.pipe';
-import { TestComponent } from '@app/test/test.component';
 
 export const pipes: any[] = [
   NameSplitPipe,
@@ -29,6 +28,6 @@ export const components: any[] = [
   SubmitButtonComponent,
   LoaderComponent,
   DialogueComponent,
-  TestComponent
+  
 ];
 

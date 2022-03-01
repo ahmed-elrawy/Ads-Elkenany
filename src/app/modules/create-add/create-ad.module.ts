@@ -7,6 +7,7 @@ import {PopupNotificationComponent} from './pages/popup-notification/popup-notif
 import {BannerLogoSortComponent} from './pages/banner-logo-sort/banner-logo-sort.component';
 import {CreateAdFormComponent} from '@app/modules/create-add/components/create-ad-form/create-ad-form.component';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { TestComponent } from '@app/test/test.component';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     PopupNotificationComponent,
     BannerLogoSortComponent,
     CreateAdFormComponent,
+    TestComponent
   ],
   imports: [
     CreateAdRoutingModule,
