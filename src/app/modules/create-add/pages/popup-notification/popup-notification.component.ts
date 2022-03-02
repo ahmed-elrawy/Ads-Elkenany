@@ -155,6 +155,7 @@ export class PopupNotificationComponent implements OnInit {
       console.log(index + '   ' + item);
     });
     this.loading = true;
+    
     this.appService.CreateAd(formData).subscribe((res) => {
       console.log(res);
       this.loading = false;

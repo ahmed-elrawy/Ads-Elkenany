@@ -51,7 +51,7 @@ export class AppService {
   ////////////for test 
 
   CreateAdTest(formData: FormData): Observable<ApiResponse<CreateAdResponse>> {
-    return this.http.post(`'https://test.elkenany.com/api'/ads/ads-system-create`, formData);
+    return this.http.post(`'https://test.elkenany.com/api'/ads/notification-create`, formData);
   }
 
 }// End of Class

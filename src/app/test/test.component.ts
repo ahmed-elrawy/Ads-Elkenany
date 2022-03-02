@@ -233,7 +233,6 @@ export class TestComponent implements OnInit {
           fileSource: new FormControl('', [Validators.required])
         })
       )
-      console.log(  this.dailyAds.controls)
     }
 
   }
@@ -407,7 +406,6 @@ export class TestComponent implements OnInit {
       company_id: this.company,
       type: this.type
     }
-    console.log(this.secondaryForm.controls)
     data.type= this.select
 
 
@@ -416,23 +414,22 @@ export class TestComponent implements OnInit {
       
       data.data.push({
         title:this.secondaryForm.controls.title.value,
-        desc:this.secondaryForm.controls.desc.value,
-        file:this.secondaryForm.controls.file.value,
+        desc: this.secondaryForm.controls.desc.value,
+        file: this.secondaryForm.controls.file.value,
       })
 
     } else if (this.select== "schedule") {
       data.data.push({
         title:this.secondaryForm.controls.title.value,
-        desc:this.secondaryForm.controls.desc.value,
-        file:this.secondaryForm.controls.file.value,
+        desc: this.secondaryForm.controls.desc.value,
+        file: this.secondaryForm.controls.file.value,
         date: this.secondaryForm.controls.date.value ,
-        time:this.secondaryForm.controls.time.value
+        time: this.secondaryForm.controls.time.value
       })
     } else if (this.select== "custom" ||this.select== "daily" ) {
       let ads =[]
       ads = this.secondaryForm.controls.ads as any
       ads.controls.forEach((i:any) => {
-        // console.log(i.controls)
         data.data.push({
           title:i.controls.title.value,
           desc:i.controls.desc.value,
@@ -448,7 +445,9 @@ export class TestComponent implements OnInit {
     formData.append('type', this.select);
     formData.append('app', this.isWeb === true ? 'web' : 'mop');
     formData.append('data',JSON.stringify( data.data));
-    console.log(data.data)
+    formData.append('company_id', this.company + '');
+
+    console.log(data)
 
     formData.forEach((item, index) => {
       console.log(index + '   ' + item);
