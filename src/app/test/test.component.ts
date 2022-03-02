@@ -11,10 +11,12 @@ import { take } from 'rxjs/operators';
 
 interface APiData{
   type:string;
+  isWeb:boolean
+
   data: {
     title:string;
     desc:string;
-    image:string;
+    file:string;
     time?:string
     date?:string;
     day?:string;
@@ -27,7 +29,7 @@ interface Schedule {
   viewValue: string;
 }
 
-interface ImageInterface {
+interface FileInterface {
   name?: string;
   file: File;
   fileResult: any;
@@ -50,13 +52,14 @@ export class TestComponent implements OnInit {
   dailyAdForm!: FormGroup;
   customAdForm!: FormGroup;
   scheduleAdForm!: FormGroup;
-  AllFiles: ImageInterface[] = [];
+  AllFiles: FileInterface[] = [];
 
 
   company = 0;
   type = '';
   loading = false;
-  
+  isWeb = true; //  1 = web - 0 mobile
+
   darkTheme: NgxMaterialTimepickerTheme = {
     container: {
       bodyBackgroundColor: '#424242',
@@ -114,6 +117,7 @@ export class TestComponent implements OnInit {
       time: ['',[]],
       from: ['',[]],
       to: ['',[]],
+      isWeb: ['', []],
       ads: this.fb.array([])
 
     })
@@ -123,13 +127,15 @@ export class TestComponent implements OnInit {
       time: ['',[]],
       from: ['',[]],
       to: ['',[]],
+      isWeb: ['', []],
       ads: this.fb.array([])
     })
 
     this.nowAdForm = this.fb.group({
       title: ['',[]],
       desc: ['',[]],
-      image:['',[]]
+      file:['',[]],
+      isWeb: ['', []],
     })
 
     this.scheduleAdForm = this.fb.group({
@@ -137,7 +143,8 @@ export class TestComponent implements OnInit {
       time: ['',[]],
       title: ['',[]],
       desc: ['',[]],
-      image:['',[]]
+      file:['',[]],
+      isWeb: ['', []],
     })
 
     // this.customAdForm.get('from')?.valueChanges.subscribe(val => {
@@ -231,6 +238,7 @@ export class TestComponent implements OnInit {
         })
       )
     }
+
   }
 
 
@@ -272,7 +280,7 @@ export class TestComponent implements OnInit {
         })
 
       })
-console.log(selectedDays)
+    console.log(selectedDays)
       this.createCustomAds(selectedDays)
 
 
@@ -327,20 +335,26 @@ console.log(selectedDays)
 
         reader.readAsDataURL(file);
         reader.onload = (e) => {
+          console.log("loadin")
         this.toasterService.loading('جارى رفع الملفات...');
           // this.AllFiles = [];
           const checkRoleExistence = (index:number) => this.AllFiles.some( ({id}) => id == index)
 
-          if(checkRoleExistence(index) ==false) {
+          if(true) { //checkRoleExistence(index) ==false
             console.log(false);
             this.AllFiles.push({fileResult: reader.result, file, name: file.name, id:index});
-
-            if(this.select == "now" || "schedule" && this.secondaryForm.controls['image']) {
-               this.secondaryForm.controls['image'].patchValue( reader.result) 
+            let fileSource ={
+              fileSource: reader.result,
+              file: file
+            }
+            if(this.select == "now" || "schedule" && this.secondaryForm.controls['file']) {
+               this.secondaryForm.controls['file'].patchValue( reader.result) 
             } else if(this.select == "custom") {
-               this.batchesCustomAds(index).controls['fileSource'].patchValue( reader.result)
+              this.batchesCustomAds(index).controls['fileSource'].patchValue(fileSource)
             } else {
-              this.batchesDailyAds(index).controls['fileSource'].patchValue( reader.result)
+
+        
+              this.batchesDailyAds(index).controls['fileSource'].patchValue(fileSource)
 
             }
           
@@ -353,7 +367,20 @@ console.log(selectedDays)
         };
       }
     }
+    // console.log(this.dailyAdsTest)
+    // console.log(this.AllFiles)
   }
+  removeFile(index: number, type:string ): void {
+
+    if(type == 'daily'){
+      this.batchesDailyAds(index).controls['fileSource'].patchValue('')
+    }  else if(type == 'custom') {
+      this.batchesCustomAds(index).controls['fileSource'].patchValue('')
+
+    }
+    
+  }
+
 
   onCheckboxChange(e:any) {
     const checkArray: FormArray = this.customAdForm.get('days') as FormArray;
@@ -378,7 +405,7 @@ console.log(selectedDays)
 
 
   onSubmit(): void {
-    let data: APiData ={type:'',data:[]}
+    let data: APiData ={type:'',data:[],  isWeb:this.isWeb}
     let user = {
       company_id: this.company,
       type: this.type
@@ -392,7 +419,7 @@ console.log(selectedDays)
   
         title:this.secondaryForm.controls.title.value,
         desc:this.secondaryForm.controls.desc.value,
-        image:this.secondaryForm.controls.image.value,
+        file:this.secondaryForm.controls.file.value,
   
       })
     } else if (this.select== "schedule") {
@@ -400,7 +427,7 @@ console.log(selectedDays)
   
         title:this.secondaryForm.controls.title.value,
         desc:this.secondaryForm.controls.desc.value,
-        image:this.secondaryForm.controls.image.value,
+        file:this.secondaryForm.controls.file.value,
         date: this.secondaryForm.controls.date.value ,
         time:this.secondaryForm.controls.time.value,
 
@@ -414,7 +441,7 @@ console.log(selectedDays)
     
           title:i.controls.title.value,
           desc:i.controls.desc.value,
-          image:i.controls.fileSource.value,
+          file:i.controls.fileSource.value,
           date: i.controls.date.value ,
           day: i.controls.day.value,
           time:this.secondaryForm.controls.time.value

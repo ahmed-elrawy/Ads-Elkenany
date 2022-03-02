@@ -22,6 +22,7 @@
                                 </mat-form-field>
                             </div>
                             <!-- now -->
+                            
 
                             <div   formGroupName="secondaryForm"   class="col-12" *ngIf="AdForm.controls['schedule'].touched && select=='now'">
 
@@ -36,6 +37,24 @@
                                     <mat-label>وصف الإعلان</mat-label>
                                     <textarea formControlName="desc" matInput placeholder="وصف الإعلان" rows="1"></textarea>
                                   </mat-form-field>
+
+                                  <div class="col-12">
+                                    <h2 class="tab__title">اختر نوع النوتيفيكشن</h2>
+                                    <mat-radio-group
+                                      [(ngModel)]="isWeb"
+                                      aria-labelledby="example-radio-group-label"
+                                      class="d-flex justify-content-start align-items-start flex-column"
+                                      color="primary"
+                                      formControlName="isWeb">
+                                      <mat-radio-button [value]="1" class="example-radio-button mx-2 my-2">
+                                        ويب سايت
+                                      </mat-radio-button>
+                                      <mat-radio-button [value]="0" class="example-radio-button mx-2 my-2">
+                                        موبيل
+                                      </mat-radio-button>
+                                    </mat-radio-group>
+                                  </div>
+
                                   <div class="col-12 text-center">
                                     <div class="custom-file my-5">
                                         <input
@@ -96,6 +115,22 @@
                                     <input formControlName="desc" matInput
                                            placeholder="الوصف" type="text"/>
                                   </mat-form-field>
+                                  <div class="col-12">
+                                    <h2 class="tab__title">اختر نوع النوتيفيكشن</h2>
+                                    <mat-radio-group
+                                      [(ngModel)]="isWeb"
+                                      aria-labelledby="example-radio-group-label"
+                                      class="d-flex justify-content-start align-items-start flex-column"
+                                      color="primary"
+                                      formControlName="isWeb">
+                                      <mat-radio-button [value]="1" class="example-radio-button mx-2 my-2">
+                                        ويب سايت
+                                      </mat-radio-button>
+                                      <mat-radio-button [value]="0" class="example-radio-button mx-2 my-2">
+                                        موبيل
+                                      </mat-radio-button>
+                                    </mat-radio-group>
+                                  </div>
 
                                   <div class="col-12 text-center">
                                     <div class="custom-file my-5">
@@ -175,8 +210,25 @@
                                         <mat-datepicker-toggle [for]="picker2" matSuffix></mat-datepicker-toggle>
                                         <mat-datepicker #picker2></mat-datepicker>
                                     </mat-form-field>
+                                    <div class="col-12">
+                                      <h2 class="tab__title">اختر نوع النوتيفيكشن</h2>
+                                      <mat-radio-group
+                                        [(ngModel)]="isWeb"
+                                        aria-labelledby="example-radio-group-label"
+                                        class="d-flex justify-content-start align-items-start flex-column"
+                                        color="primary"
+                                        formControlName="isWeb">
+                                        <mat-radio-button [value]="1" class="example-radio-button mx-2 my-2">
+                                          ويب سايت
+                                        </mat-radio-button>
+                                        <mat-radio-button [value]="0" class="example-radio-button mx-2 my-2">
+                                          موبيل
+                                        </mat-radio-button>
+                                      </mat-radio-group>
+                                    </div>
+  
 
-                                    <div class="w-100">
+                                    <div class="w-100 m-2">
                                       <!-- <div *ngFor="let day of weekday"  >
                                         <mat-checkbox   formControlName="days" [value]="day">{{day}}</mat-checkbox >
 
@@ -195,6 +247,88 @@
     
                                 </div>
 
+                                <ng-container formArrayName="ads"  >
+                                  <ng-container *ngFor="let ad of customAdstest.controls; let i = index">
+                                    <div style="border:  1px solid #198754; padding: 10px; margin-bottom: 15px;">
+                                      <P >{{ad.controls.date.value}} / {{ad.controls.day.value}}</P>
+                                      <div [formGroupName]="i" class="row">
+                                         <mat-form-field appearance="outline" class="col-6">
+                                             <mat-label>العنوان</mat-label>
+                                             <input formControlName="title" matInput
+                                                 placeholder="الوصف" type="text"/>
+                                         </mat-form-field>
+  
+                                         <mat-form-field appearance="outline" class="col-6">
+                                             <mat-label>الوصف</mat-label>
+                                             <input formControlName="desc" matInput
+                                                 placeholder="الوصف" type="text"/>
+                                         </mat-form-field>
+  
+  
+                                         <div class="col-12 text-center">
+                                           <div *ngIf="AllFiles.length>0" class="row my-2 justify-content-center align-items-start">
+                                             <h4 class="our-text-primary">صورة / فيديو الإعلان</h4>
+                                             <ng-container>
+                          
+                                               <!-- * -->
+                                               <div *ngIf="ad.value.fileSource.file && ad.value.fileSource.file.type  | appIncludes: 'image/'" class="col-6 col-md-3 my-2">
+                                                <div class="d-flex justify-content-center align-items-center flex-column">
+                                                   <img [src]="ad.value.fileSource.fileSource" alt="" class="img-fluid" height="175px" width="175px">
+                                                   <button
+                                                   (click)="removeFile(i,'custom')"
+  
+                                                     class="mt-2"
+                                                     color="warn"
+                                                     mat-stroked-button
+                                                     type="button">
+                                                     حدف الصورة
+                                                     <mat-icon>delete</mat-icon>
+                                                   </button>
+                                                 </div>
+                                               </div>
+                                             </ng-container>
+                                           </div>
+  
+                                           
+                                             <div class="custom-file">
+                                                 <input
+                                                 #fileImage
+                                                 (change)="handleFileInput($event, i)"
+                                                 formControlName="file"
+                                                 accept="image/png,image/jpeg,image/jpg,image/gif,video/mp4,video/x-m4v,video/*"
+                                                 aria-describedby="Upload Photo Or Video"
+                                                 class="d-none"
+                                                 type="file"/>
+                                                 <button (click)="fileImage.click()"
+                                                         class="w-50"
+                                                         color="primary"
+                                                         mat-stroked-button
+                                                         type="button">
+                                                 رفع صورة او فيديو للإعلان
+                                                 <svg enable-background="new 0 0 24 24" fill=" #1f6b00" height="24px"
+                                                     viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
+                                                     <g>
+                                                     <rect fill="none" height="24" width="24"/>
+                                                     </g>
+                                                     <g>
+                                                     <path
+                                                         d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/>
+                                                     </g>
+                                                 </svg>
+                                                 </button>
+                                             </div>
+                                         </div>
+  
+  
+   
+                                     </div> 
+                                    </div>
+                                               
+                              
+                                  </ng-container>
+                              </ng-container>
+  
+<!-- 
                                 <ng-container formArrayName="ads"  >
                                     <ng-container *ngFor="let ad of customAdstest.controls; let index = index">
                                       <P >{{ad.controls.date.value}} / {{ad.controls.day.value}}</P>
@@ -243,7 +377,7 @@
       
                                         </div>
                                     </ng-container>
-                                </ng-container>
+                                </ng-container> -->
 
 
 
@@ -288,55 +422,105 @@
                                       <mat-datepicker-toggle [for]="picker2" matSuffix></mat-datepicker-toggle>
                                       <mat-datepicker #picker2></mat-datepicker>
                                   </mat-form-field>
+
+                                  <div class="col-12">
+                                    <h2 class="tab__title">اختر نوع النوتيفيكشن</h2>
+                                    <mat-radio-group
+                                      [(ngModel)]="isWeb"
+                                      aria-labelledby="example-radio-group-label"
+                                      class="d-flex justify-content-start align-items-start flex-column"
+                                      color="primary"
+                                      formControlName="isWeb">
+                                      <mat-radio-button [value]="1" class="example-radio-button mx-2 my-2">
+                                        ويب سايت
+                                      </mat-radio-button>
+                                      <mat-radio-button [value]="0" class="example-radio-button mx-2 my-2">
+                                        موبيل
+                                      </mat-radio-button>
+                                    </mat-radio-group>
+                                  </div>
+
   
                               </div>
       
                               <ng-container formArrayName="ads"  >
                                 <ng-container *ngFor="let ad of dailyAdsTest.controls; let i = index">
+                                  <div style="border:  1px solid #198754; padding: 10px; margin-bottom: 15px;">
                                     <P >{{ad.controls.date.value}} / {{ad.controls.day.value}}</P>
-                                     <div [formGroupName]="i" class="row">
-                                        <mat-form-field appearance="outline" class="col-4">
-                                            <mat-label>العنوان</mat-label>
-                                            <input formControlName="title" matInput
-                                                placeholder="الوصف" type="text"/>
-                                        </mat-form-field>
+                                    <div [formGroupName]="i" class="row">
+                                       <mat-form-field appearance="outline" class="col-6">
+                                           <mat-label>العنوان</mat-label>
+                                           <input formControlName="title" matInput
+                                               placeholder="الوصف" type="text"/>
+                                       </mat-form-field>
 
-                                        <mat-form-field appearance="outline" class="col-4">
-                                            <mat-label>الوصف</mat-label>
-                                            <input formControlName="desc" matInput
-                                                placeholder="الوصف" type="text"/>
-                                        </mat-form-field>
-                                        <div class="col-4 text-center">
-                                            <div class="custom-file">
-                                                <input
-                                                #fileImage
-                                                (change)="handleFileInput($event, i)"
-                                                formControlName="file"
-                                                accept="image/png,image/jpeg,image/jpg,image/gif,video/mp4,video/x-m4v,video/*"
-                                                aria-describedby="Upload Photo Or Video"
-                                                class="d-none"
-                                                type="file"/>
-                                                <button (click)="fileImage.click()"
-                                                        class="w-50"
-                                                        color="primary"
-                                                        mat-stroked-button
-                                                        type="button">
-                                                رفع صورة او فيديو للإعلان
-                                                <svg enable-background="new 0 0 24 24" fill=" #1f6b00" height="24px"
-                                                    viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
-                                                    <g>
-                                                    <rect fill="none" height="24" width="24"/>
-                                                    </g>
-                                                    <g>
-                                                    <path
-                                                        d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/>
-                                                    </g>
-                                                </svg>
-                                                </button>
-                                            </div>
-                                        </div>
-  
-                                    </div> 
+                                       <mat-form-field appearance="outline" class="col-6">
+                                           <mat-label>الوصف</mat-label>
+                                           <input formControlName="desc" matInput
+                                               placeholder="الوصف" type="text"/>
+                                       </mat-form-field>
+
+
+                                       <div class="col-12 text-center">
+                                         <div *ngIf="AllFiles.length>0" class="row my-2 justify-content-center align-items-start">
+                                           <h4 class="our-text-primary">صورة / فيديو الإعلان</h4>
+                                           <ng-container>
+                        
+                                             <!-- * -->
+                                             <div *ngIf="ad.value.fileSource.file && ad.value.fileSource.file.type  | appIncludes: 'image/'" class="col-6 col-md-3 my-2">
+                                              <div class="d-flex justify-content-center align-items-center flex-column">
+                                                 <img [src]="ad.value.fileSource.fileSource" alt="" class="img-fluid" height="175px" width="175px">
+                                                 <button
+                                                 (click)="removeFile(i,'daily')"
+
+                                                   class="mt-2"
+                                                   color="warn"
+                                                   mat-stroked-button
+                                                   type="button">
+                                                   حدف الصورة
+                                                   <mat-icon>delete</mat-icon>
+                                                 </button>
+                                               </div>
+                                             </div>
+                                           </ng-container>
+                                         </div>
+
+                                         
+                                           <div class="custom-file">
+                                               <input
+                                               #fileImage
+                                               (change)="handleFileInput($event, i)"
+                                               formControlName="file"
+                                               accept="image/png,image/jpeg,image/jpg,image/gif,video/mp4,video/x-m4v,video/*"
+                                               aria-describedby="Upload Photo Or Video"
+                                               class="d-none"
+                                               type="file"/>
+                                               <button (click)="fileImage.click()"
+                                                       class="w-50"
+                                                       color="primary"
+                                                       mat-stroked-button
+                                                       type="button">
+                                               رفع صورة او فيديو للإعلان
+                                               <svg enable-background="new 0 0 24 24" fill=" #1f6b00" height="24px"
+                                                   viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
+                                                   <g>
+                                                   <rect fill="none" height="24" width="24"/>
+                                                   </g>
+                                                   <g>
+                                                   <path
+                                                       d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/>
+                                                   </g>
+                                               </svg>
+                                               </button>
+                                           </div>
+                                       </div>
+
+
+ 
+                                   </div> 
+                                  </div>
+                                             
+                            
                                 </ng-container>
                             </ng-container>
 
@@ -348,7 +532,7 @@
                               <!-- end of schedule -->    
                               <div class="col-12 text-center">
                                 <button
-                                
+                                 [class.disabled__btn]="AdForm.untouched || dailyAdForm.invalid || loading || AllFiles.length === 0"
                                   class="auth__btn--submit"
                                   mat-raised-button
                                   type="submit">
