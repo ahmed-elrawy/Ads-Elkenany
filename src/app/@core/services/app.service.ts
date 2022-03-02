@@ -46,4 +46,15 @@ export class AppService {
     return this.http.post(`${env.ApiUrl}/ads/ads-system-create`, formData);
   }
 
+
+
+  ////////////for test 
+
+  CreateAdTest(formData: FormData): Observable<ApiResponse<CreateAdResponse>> {
+    return this.http.post(`'https://test.elkenany.com/api'/ads/ads-system-create`, formData);
+  }
+
 }// End of Class
+
+
+

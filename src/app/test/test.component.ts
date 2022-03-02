@@ -114,9 +114,9 @@ export class TestComponent implements OnInit {
     this.dailyAdForm = this.fb.group({
       date: ['',[]],
       days: this.fb.array([]),
-      time: ['',[]],
-      from: ['',[]],
-      to: ['',[]],
+      time: ['',[Validators.required]],
+      from: ['',[Validators.required]],
+      to: ['',[Validators.required]],
       isWeb: ['', []],
       ads: this.fb.array([])
 
@@ -132,27 +132,21 @@ export class TestComponent implements OnInit {
     })
 
     this.nowAdForm = this.fb.group({
-      title: ['',[]],
-      desc: ['',[]],
-      file:['',[]],
+      title: ['',[Validators.required]],
+      desc: ['',[Validators.required]],
+      file:['',[Validators.required]],
       isWeb: ['', []],
     })
 
     this.scheduleAdForm = this.fb.group({
-      date: ['',[]],
-      time: ['',[]],
-      title: ['',[]],
-      desc: ['',[]],
-      file:['',[]],
+      date: ['',[Validators.required]],
+      time: ['',[Validators.required]],
+      title: ['',[Validators.required]],
+      desc: ['',[Validators.required]],
+      file:['',[Validators.required]],
       isWeb: ['', []],
     })
 
-    // this.customAdForm.get('from')?.valueChanges.subscribe(val => {
-    //   this.from=this.datePipe.transform(val, 'yyyy-MM-dd') ||"";
-    // });
-    // this.customAdForm.get('to')?.valueChanges.subscribe(val => {
-    //   this.to= this.datePipe.transform(val, 'yyyy-MM-dd') ||""
-    // });
 
   }
   get customAds(){return this.customAdForm.controls["ads"] as FormArray;}// conver name to custom ads
@@ -175,6 +169,8 @@ export class TestComponent implements OnInit {
     this.secondaryForm.reset()
     this.select= value
     this.AdForm.controls["secondaryForm"] =  new FormGroup({})
+    this.AllFiles = [];
+
     switch (value) {
 
       case "now":
@@ -209,8 +205,8 @@ export class TestComponent implements OnInit {
         this.fb.group({
           date: [this.datePipe.transform( ads[i].date, 'yyyy-MM-dd'), []],
           day: [ads[i].day, []],
-          title: ['', []],
-          desc: ['', []],
+          title: ['', [Validators.required]],
+          desc: ['', [Validators.required]],
           file: new FormControl('', [Validators.required]),
           fileSource: new FormControl('', [Validators.required])
         })
@@ -231,12 +227,13 @@ export class TestComponent implements OnInit {
           date: [this.datePipe.transform( ads[i].date, 'yyyy-MM-dd'), []],
           // to:  ['', []],
           day: [ads[i].day, []],
-          title: ['', []],
-          desc: ['', []],
+          title: ['',[Validators.required]],
+          desc: ['', [Validators.required]],
           file: new FormControl('', [Validators.required]),
           fileSource: new FormControl('', [Validators.required])
         })
       )
+      console.log(  this.dailyAds.controls)
     }
 
   }
@@ -280,7 +277,6 @@ export class TestComponent implements OnInit {
         })
 
       })
-    console.log(selectedDays)
       this.createCustomAds(selectedDays)
 
 
@@ -328,56 +324,55 @@ export class TestComponent implements OnInit {
 
   handleFileInput(event: any, index:number): void {
     const fileList = event.target.files;
-  
+
     if (fileList.length > 0) {
+
       for (const file of fileList) {
+
         const reader = new FileReader();
 
         reader.readAsDataURL(file);
         reader.onload = (e) => {
           console.log("loadin")
-        this.toasterService.loading('جارى رفع الملفات...');
-          // this.AllFiles = [];
-          const checkRoleExistence = (index:number) => this.AllFiles.some( ({id}) => id == index)
-
-          if(true) { //checkRoleExistence(index) ==false
-            console.log(false);
+          this.toasterService.loading('جارى رفع الملفات...');
+           this.AllFiles = [];
             this.AllFiles.push({fileResult: reader.result, file, name: file.name, id:index});
+ 
+
             let fileSource ={
               fileSource: reader.result,
-              file: file
+              type: file.type 
             }
+     
             if(this.select == "now" || "schedule" && this.secondaryForm.controls['file']) {
                this.secondaryForm.controls['file'].patchValue( reader.result) 
             } else if(this.select == "custom") {
               this.batchesCustomAds(index).controls['fileSource'].patchValue(fileSource)
-            } else {
-
-        
+            } else if(this.select == "daily") {
               this.batchesDailyAds(index).controls['fileSource'].patchValue(fileSource)
-
-            }
+            } 
           
-          }else {
-            console.log(true);
-          }
+    
         };
         reader.onloadend = (ee) => {
            this.toasterService.stopLoading();
         };
       }
     }
-    // console.log(this.dailyAdsTest)
-    // console.log(this.AllFiles)
+    console.log( this.dailyAdsTest.controls)
   }
-  removeFile(index: number, type:string ): void {
-
+  removeFile(index:  number, type:string ): void {
     if(type == 'daily'){
-      this.batchesDailyAds(index).controls['fileSource'].patchValue('')
+      this.batchesDailyAds(+index).controls['fileSource'].patchValue('')
     }  else if(type == 'custom') {
-      this.batchesCustomAds(index).controls['fileSource'].patchValue('')
-
+      this.batchesCustomAds(+index).controls['fileSource'].patchValue('')
     }
+  }
+
+  removeFile2(name: string | undefined): void {
+    this.AllFiles = this.AllFiles.filter((image) => {
+      return image.name !== name;
+    });
     
   }
 
@@ -405,6 +400,8 @@ export class TestComponent implements OnInit {
 
 
   onSubmit(): void {
+    const formData: FormData = new FormData();
+
     let data: APiData ={type:'',data:[],  isWeb:this.isWeb}
     let user = {
       company_id: this.company,
@@ -414,23 +411,22 @@ export class TestComponent implements OnInit {
     data.type= this.select
 
 
+
     if(this.select== "now" ) {
+      
       data.data.push({
-  
         title:this.secondaryForm.controls.title.value,
         desc:this.secondaryForm.controls.desc.value,
         file:this.secondaryForm.controls.file.value,
-  
       })
+
     } else if (this.select== "schedule") {
       data.data.push({
-  
         title:this.secondaryForm.controls.title.value,
         desc:this.secondaryForm.controls.desc.value,
         file:this.secondaryForm.controls.file.value,
         date: this.secondaryForm.controls.date.value ,
-        time:this.secondaryForm.controls.time.value,
-
+        time:this.secondaryForm.controls.time.value
       })
     } else if (this.select== "custom" ||this.select== "daily" ) {
       let ads =[]
@@ -438,61 +434,41 @@ export class TestComponent implements OnInit {
       ads.controls.forEach((i:any) => {
         // console.log(i.controls)
         data.data.push({
-    
           title:i.controls.title.value,
           desc:i.controls.desc.value,
           file:i.controls.fileSource.value,
           date: i.controls.date.value ,
           day: i.controls.day.value,
           time:this.secondaryForm.controls.time.value
-     
         })
       })
 
     }
 
+    formData.append('type', this.select);
+    formData.append('app', this.isWeb === true ? 'web' : 'mop');
+    formData.append('data',JSON.stringify( data.data));
+    console.log(data.data)
+
+    formData.forEach((item, index) => {
+      console.log(index + '   ' + item);
+    });
     this.loading = true;
-    console.log(data)
+    this.appService.CreateAdTest(formData).subscribe((res) => {
+      console.log(res);
+      this.loading = false;
+      this.toasterService.showSuccess('تم انشاء الاعلان بنجاح');
+      this.router.navigate(['/my-account'], {
+        queryParams: {company_id: this.company, is_outside: true}
+      }).then();
+    }, (error) => {
+      console.log(error);
+      this.loading = false;
+      this.toasterService.showFail(error.error.error);
+      // this.errorHandler.HandelAuthErrors(error.error.errors, error.status, error.message);
+    });
 
 
-    // for(let i=0; i< this.customAdstest.controls.length ;i++) {
-    //   data.push({
-    //     type:"dd",
-    //     title:this.customAdstest.controls[i].controls.title.value,
-    //     desc:this.customAdstest.controls[i].controls.desc.value,
-    //     image:"dd",
-    //     time:this.customAdstest.controls[i].controls.date.value,
-    //     date:this.customAdstest.controls[i].controls.date.value,
-    //     day:this.customAdstest.controls[i].controls.day.value
-    //   })
-    //   console.log(this.customAdstest.controls[i].controls)
-    //   console.log(data)
-    // }
-
-    // console.log(this.schedule.value)
-    // console.log(this.secondaryForm.controls)
-    // console.log(this.secondaryForm.controls.time.value)
-    // console.log(this.secondaryForm.controls.ads.value)
-
-    // const formData: FormData = new FormData();
-
-    // formData.append('type', this.AdForm.controls['schedule'].value);
-
-    // let data:{
-    //   title: string,
-    //   desc: string ,
-    //   image?: ImageInterface
-    //   time: string,
-    //   data:{[key: string]:string}
-    // } = {
-    //   title: '',
-    //   desc:'',
-    //   time: this.secondaryForm.controls.time.value,
-    //   data: this.secondaryForm.controls.ads.value
-    // }
-
-
-    // console.log(data)
   }
 
 }
