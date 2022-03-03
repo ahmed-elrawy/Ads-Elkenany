@@ -12,8 +12,8 @@ let children: Routes;
 children = [
   {
     path: '',
-    component: TestComponent
-    // component: CreateAdPageComponent
+    // component: TestComponent
+     component: CreateAdPageComponent
   },
   {
     path: 'path-one',
