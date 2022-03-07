@@ -7,6 +7,7 @@ import {BannerLogoSortComponent} from '@app/modules/create-add/pages/banner-logo
 import {PopupNotificationComponent} from '@app/modules/create-add/pages/popup-notification/popup-notification.component';
 import {CreateAdFormComponent} from '@app/modules/create-add/components/create-ad-form/create-ad-form.component';
 import { TestComponent } from '@app/test/test.component';
+import { NotificationComponent } from './pages/notification/notification.component';
 
 let children: Routes;
 children = [
@@ -22,6 +23,11 @@ children = [
   {
     path: 'path-two',
     component: PopupNotificationComponent
+  },
+
+  {
+    path: 'notification',
+    component: NotificationComponent
   },
   {
     path: 'form-creation',

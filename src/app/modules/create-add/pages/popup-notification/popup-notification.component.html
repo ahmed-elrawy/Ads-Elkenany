@@ -1,802 +1,169 @@
 
 
-  <div class="container my-2">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="page__title">محتوى الإعلان</h1>
-        </div>
-        <div class="col-12">
-            <mat-card>
-                <mat-card-content>
-                    <div class="form__container">
-                        <form  [formGroup]="AdForm" dir="rtl"(ngSubmit)="onSubmit()">
 
-                            <div class="col-12">
-                                <mat-form-field appearance="outline" class="w-100">
-                                  <mat-label>الجددوله</mat-label>
-                                  <mat-select  formControlName="schedule"(selectionChange)="addForm($event.value)">
-                                    <mat-option *ngFor="let schedule of schedules" [value]="schedule.value">
-                                      {{schedule.viewValue}}
-                                    </mat-option>
-                                  </mat-select>
-                                </mat-form-field>
-                            </div>
-                            <!-- now -->
-                            
 
-                            <div   formGroupName="secondaryForm"   class="col-12" *ngIf="AdForm.controls['schedule'].touched && select=='now'">
-
-                                <mat-form-field appearance="outline" class="w-100">
-                                    <mat-label>العنوان</mat-label>
-                                    <input formControlName="title" matInput
-                                           placeholder="العنوان" type="text"/>
-
-                                  </mat-form-field>
-
-                                  <mat-form-field appearance="outline" class="w-100">
-                                    <mat-label>وصف الإعلان</mat-label>
-                                    <textarea formControlName="desc" matInput placeholder="وصف الإعلان" rows="1"></textarea>
-                                  </mat-form-field>
-
-                                  <div class="col-12">
-                                    <h2 class="tab__title">اختر نوع النوتيفيكشن</h2>
-                                    <mat-radio-group
-                                      [(ngModel)]="isWeb"
-                                      aria-labelledby="example-radio-group-label"
-                                      class="d-flex justify-content-start align-items-start flex-column"
-                                      color="primary"
-                                      formControlName="isWeb">
-                                      <mat-radio-button [value]="1" class="example-radio-button mx-2 my-2">
-                                        ويب سايت
-                                      </mat-radio-button>
-                                      <mat-radio-button [value]="0" class="example-radio-button mx-2 my-2">
-                                        موبيل
-                                      </mat-radio-button>
-                                    </mat-radio-group>
-                                  </div>
-
-
-                                  <div class="col-12 text-center">
-                                    <div *ngIf="AllFiles.length>0" class="row my-2 justify-content-center align-items-start">
-                                      <h4 class="our-text-primary">صورة / فيديو الإعلان</h4>
-                                      <ng-container *ngFor="let file of AllFiles">
-                                        <div *ngIf="file.file?.type | appIncludes: 'video/'" class="col-6 col-md-3 my-2">
-                                          <div class="d-flex justify-content-center align-items-center flex-column">
-                                            <video controls height="300px" width="300px">
-                                              <source [src]="file?.fileResult" type="video/mp4">
-                                              <source [src]="file?.fileResult" type="video/ogg">
-                                              المتصفح الخاص بك لا يدعم تشغيل الفيديوهات
-                                            </video>
-                                            <button
-                                              (click)="removeFile2(file.name)"
-                                              class="mt-2" color="warn" mat-stroked-button type="button">
-                                              حدف الفيديو
-                                              <mat-icon>delete</mat-icon>
-                                            </button>
-                                          </div>
-                                        </div>
-                                        <div *ngIf="file?.file?.type  | appIncludes: 'image/'" class="col-6 col-md-3 my-2">
-                                          <div class="d-flex justify-content-center align-items-center flex-column">
-                                            <img [src]="file.fileResult" alt="" class="img-fluid" height="175px" width="175px">
-                                            <button
-                                              (click)="removeFile2(file.name)"
-                                              class="mt-2"
-                                              color="warn"
-                                              mat-stroked-button
-                                              type="button">
-                                              حدف الصورة
-                                              <mat-icon>delete</mat-icon>
-                                            </button>
-                                          </div>
-                                        </div>
-                                      </ng-container>
-                                    </div>
-                                    <div class="custom-file my-5">
-                                      <input
-                                        #fileImage
-                                        (change)="handleFileInput($event,0)"
-                                        accept="image/png,image/jpeg,image/jpg,image/gif,video/mp4,video/x-m4v,video/*"
-                                        aria-describedby="Upload Photo Or Video"
-                                        class="d-none"
-                                        type="file"/>
-                                      <button (click)="fileImage.click()"
-                                              class="w-50"
-                                              color="primary"
-                                              mat-stroked-button
-                                              type="button">
-                                        رفع صورة او فيديو للإعلان
-                                        <svg enable-background="new 0 0 24 24" fill=" #1f6b00" height="24px"
-                                             viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
-                                          <g>
-                                            <rect fill="none" height="24" width="24"/>
-                                          </g>
-                                          <g>
-                                            <path
-                                              d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/>
-                                          </g>
-                                        </svg>
-                                      </button>
-                                    </div>
-                                  </div>
-
-
-
-                            </div>
-                            <!-- end of now -->
-
-                            <!-- schedule -->
-                            <div   formGroupName="secondaryForm"   class="col-12" *ngIf="AdForm.controls['schedule'].touched && select=='schedule'">
-
-
-                                  <mat-form-field appearance="outline" class="w-100">
-                                    <mat-label>تاريخ</mat-label>
-                                    <input (focus)="picker.open()" [matDatepicker]="picker"(dateInput)="fromTo($event.value,'0')"
-                                            formControlName="date" matInput>
-                                    <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
-                                    <mat-datepicker #picker></mat-datepicker>
-                                </mat-form-field>
-                                  
-
-
-
-                                  <div class="col-12">
-                                    <mat-form-field appearance="outline" class="w-100">
-                                      <mat-label>وقت إرسال النوتيفكشن</mat-label>
-                                      <input
-                    
-                                        [ngxTimepicker]="picker3"
-                                        formControlName="time" matInput>
-                                      <ngx-material-timepicker-toggle [for]="picker3" matSuffix></ngx-material-timepicker-toggle>
-                                      <ngx-material-timepicker #picker3 [theme]="darkTheme"></ngx-material-timepicker>
-                                    </mat-form-field>
-                                  </div>
-
-
-                                  <mat-form-field appearance="outline" class="w-100">
-                                    <mat-label>العنون</mat-label>
-                                    <input formControlName="title" matInput
-                                           placeholder="العنوان" type="text"/>
-                                  </mat-form-field>
-
-                                  <mat-form-field appearance="outline" class="w-100">
-                                    <mat-label>الوصف</mat-label>
-                                    <input formControlName="desc" matInput
-                                           placeholder="الوصف" type="text"/>
-                                  </mat-form-field>
-                                  <div class="col-12">
-                                    <h2 class="tab__title">اختر نوع النوتيفيكشن</h2>
-                                    <mat-radio-group
-                                      [(ngModel)]="isWeb"
-                                      aria-labelledby="example-radio-group-label"
-                                      class="d-flex justify-content-start align-items-start flex-column"
-                                      color="primary"
-                                      formControlName="isWeb">
-                                      <mat-radio-button [value]="1" class="example-radio-button mx-2 my-2">
-                                        ويب سايت
-                                      </mat-radio-button>
-                                      <mat-radio-button [value]="0" class="example-radio-button mx-2 my-2">
-                                        موبيل
-                                      </mat-radio-button>
-                                    </mat-radio-group>
-                                  </div>
-
-                                  <!-- <div class="col-12 text-center">
-                                    <div class="custom-file my-5">
-                                        <input
-                                          #fileImage
-                                          (change)="handleFileInput($event,0)"
-                                          
-                                          accept="image/png,image/jpeg,image/jpg,image/gif,video/mp4,video/x-m4v,video/*"
-                                          aria-describedby="Upload Photo Or Video"
-                                          class="d-none"
-                                          type="file"/>
-                                        <button (click)="fileImage.click()"
-                                                class="w-50"
-                                                color="primary"
-                                                mat-stroked-button
-                                                type="button">
-                                          رفع صورة او فيديو للإعلان
-                                          <svg enable-background="new 0 0 24 24" fill=" #1f6b00" height="24px"
-                                               viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
-                                            <g>
-                                              <rect fill="none" height="24" width="24"/>
-                                            </g>
-                                            <g>
-                                              <path
-                                                d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/>
-                                            </g>
-                                          </svg>
-                                        </button>
-                                      </div>
-                                  </div> -->
-                                  <div class="col-12 text-center">
-                                    <div *ngIf="AllFiles.length>0" class="row my-2 justify-content-center align-items-start">
-                                      <h4 class="our-text-primary">صورة / فيديو الإعلان</h4>
-                                      <ng-container *ngFor="let file of AllFiles">
-                                        <div *ngIf="file.file?.type | appIncludes: 'video/'" class="col-6 col-md-3 my-2">
-                                          <div class="d-flex justify-content-center align-items-center flex-column">
-                                            <video controls height="300px" width="300px">
-                                              <source [src]="file?.fileResult" type="video/mp4">
-                                              <source [src]="file?.fileResult" type="video/ogg">
-                                              المتصفح الخاص بك لا يدعم تشغيل الفيديوهات
-                                            </video>
-                                            <button
-                                              (click)="removeFile2(file.name)"
-                                              class="mt-2" color="warn" mat-stroked-button type="button">
-                                              حدف الفيديو
-                                              <mat-icon>delete</mat-icon>
-                                            </button>
-                                          </div>
-                                        </div>
-                                        <div *ngIf="file?.file?.type  | appIncludes: 'image/'" class="col-6 col-md-3 my-2">
-                                          <div class="d-flex justify-content-center align-items-center flex-column">
-                                            <img [src]="file.fileResult" alt="" class="img-fluid" height="175px" width="175px">
-                                            <button
-                                              (click)="removeFile2(file.name)"
-                                              class="mt-2"
-                                              color="warn"
-                                              mat-stroked-button
-                                              type="button">
-                                              حدف الصورة
-                                              <mat-icon>delete</mat-icon>
-                                            </button>
-                                          </div>
-                                        </div>
-                                      </ng-container>
-                                    </div>
-                                    <div class="custom-file my-5">
-                                      <input
-                                        #fileImage
-                                        (change)="handleFileInput($event,0)"
-                                        accept="image/png,image/jpeg,image/jpg,image/gif,video/mp4,video/x-m4v,video/*"
-                                        aria-describedby="Upload Photo Or Video"
-                                        class="d-none"
-                                        type="file"/>
-                                      <button (click)="fileImage.click()"
-                                              class="w-50"
-                                              color="primary"
-                                              mat-stroked-button
-                                              type="button">
-                                        رفع صورة او فيديو للإعلان
-                                        <svg enable-background="new 0 0 24 24" fill=" #1f6b00" height="24px"
-                                             viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
-                                          <g>
-                                            <rect fill="none" height="24" width="24"/>
-                                          </g>
-                                          <g>
-                                            <path
-                                              d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/>
-                                          </g>
-                                        </svg>
-                                      </button>
-                                    </div>
-                                  </div>
-
-
-
-                            </div>
-                            <!-- end of schedule -->
-                              <!-- schedule -->
-                            <div   formGroupName="secondaryForm"   class="col-12" *ngIf="AdForm.controls['schedule'].touched && select=='custom'">
-
-                                <div class="row">
-
-    
-                                  <div class="col-12">
-                                    <mat-form-field appearance="outline" class="w-100">
-                                      <mat-label>وقت إرسال النوتيفكشن</mat-label>
-                                      <input
-                    
-                                        [ngxTimepicker]="picker3"
-                                        formControlName="time" matInput>
-                                      <ngx-material-timepicker-toggle [for]="picker3" matSuffix></ngx-material-timepicker-toggle>
-                                      <ngx-material-timepicker #picker3 [theme]="darkTheme"></ngx-material-timepicker>
-                                    </mat-form-field>
-                                  </div>
-
-                                    <mat-form-field appearance="outline" class="w-50">
-                                        <mat-label>تاريخ البدئ الإعلان</mat-label>
-                                        <input (focus)="picker.open()" [matDatepicker]="picker"(dateInput)="fromTo($event.value,'0')"
-                                                formControlName="from" matInput>
-                                        <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
-                                        <mat-datepicker #picker></mat-datepicker>
-                                    </mat-form-field>
-                                    
-                      
-
-                                    <!-- <mat-form-field appearance="outline" class="w-100">
-                                      <mat-label> ايام الاسبوع</mat-label>
-
-                                      <mat-radio-group formControlName="days" matInput>
-                                        <mat-radio-button *ngFor="let day of weekday" checked=true  value="{{1}}">{{day}}</mat-radio-button>
-                                      </mat-radio-group>
-                  
-                                  </mat-form-field> -->
-
-                                    <mat-form-field appearance="outline" class="w-50">
-                                        <mat-label>تاريخ انتهاء الإعلان</mat-label>
-                                        <input (focus)="picker2.open()" [matDatepicker]="picker2" (dateInput)="fromTo('0',$event.value)"
-                                                formControlName="to" matInput>
-                                        <mat-datepicker-toggle [for]="picker2" matSuffix></mat-datepicker-toggle>
-                                        <mat-datepicker #picker2></mat-datepicker>
-                                    </mat-form-field>
-                                    <div class="col-12">
-                                      <h2 class="tab__title">اختر نوع النوتيفيكشن</h2>
-                                      <mat-radio-group
-                                        [(ngModel)]="isWeb"
-                                        aria-labelledby="example-radio-group-label"
-                                        class="d-flex justify-content-start align-items-start flex-column"
-                                        color="primary"
-                                        formControlName="isWeb">
-                                        <mat-radio-button [value]="1" class="example-radio-button mx-2 my-2">
-                                          ويب سايت
-                                        </mat-radio-button>
-                                        <mat-radio-button [value]="0" class="example-radio-button mx-2 my-2">
-                                          موبيل
-                                        </mat-radio-button>
-                                      </mat-radio-group>
-                                    </div>
-  
-
-                                    <div class="w-100 m-2">
-                                      <!-- <div *ngFor="let day of weekday"  >
-                                        <mat-checkbox   formControlName="days" [value]="day">{{day}}</mat-checkbox >
-
-                                      </div> -->
-
-                                      <div  style="display: inline-block;" formArrayName="days" *ngFor="let value of weekday; let i = index">
-                                        <!-- <mat-checkbox ctype="checkbox" [value]="value"  (change)="onCheckboxChange($event)" >{{value}}  </mat-checkbox> -->
-
-                                        <input type="checkbox" [value]="value"  (change)="onCheckboxChange($event)" >
-                                        {{value}}  
-                                      </div>
-
-
-                                    </div>
-
-    
-                                </div>
-
-                                <ng-container formArrayName="ads"  >
-                                  <ng-container *ngFor="let ad of customAdstest.controls; let i = index">
-                                    <div style="border:  1px solid #198754; padding: 10px; margin-bottom: 15px;">
-                                      <P >{{ad.controls.date.value}} / {{ad.controls.day.value}}</P>
-                                      <div [formGroupName]="i" class="row">
-                                         <mat-form-field appearance="outline" class="col-6">
-                                             <mat-label>العنوان</mat-label>
-                                             <input formControlName="title" matInput
-                                                 placeholder="الوصف" type="text"/>
-                                         </mat-form-field>
-  
-                                         <mat-form-field appearance="outline" class="col-6">
-                                             <mat-label>الوصف</mat-label>
-                                             <input formControlName="desc" matInput
-                                                 placeholder="الوصف" type="text"/>
-                                         </mat-form-field>
-  
-  
-                                         <div class="col-12 text-center">
-                                           <div *ngIf="AllFiles.length>0" class="row my-2 justify-content-center align-items-start">
-                                             <h4 class="our-text-primary">صورة / فيديو الإعلان</h4>
-                                             <ng-container>
-                          
-                                               <!-- * -->
-                                               <div *ngIf="ad.value.fileSource && ad.value.fileType | appIncludes: 'image/'" class="col-6 col-md-3 my-2">
-                                                <div class="d-flex justify-content-center align-items-center flex-column">
-                                                   <img [src]="ad.value.fileSource" alt="" class="img-fluid" height="175px" width="175px">
-                                                   <button
-                                                   (click)="removeFile(i,'custom')"
-  
-                                                     class="mt-2"
-                                                     color="warn"
-                                                     mat-stroked-button
-                                                     type="button">
-                                                     حدف الصورة
-                                                     <mat-icon>delete</mat-icon>
-                                                   </button>
-                                                 </div>
-                                               </div>
-                                             </ng-container>
-                                           </div>
-  
-                                           
-                                             <div class="custom-file">
-                                                 <input
-                                                 #fileImage
-                                                 (change)="handleFileInput($event, i)"
-                                                 formControlName="file"
-                                                 accept="image/png,image/jpeg,image/jpg,image/gif,video/mp4,video/x-m4v,video/*"
-                                                 aria-describedby="Upload Photo Or Video"
-                                                 class="d-none"
-                                                 type="file"/>
-                                                 <button (click)="fileImage.click()"
-                                                         class="w-50"
-                                                         color="primary"
-                                                         mat-stroked-button
-                                                         type="button">
-                                                 رفع صورة او فيديو للإعلان
-                                                 <svg enable-background="new 0 0 24 24" fill=" #1f6b00" height="24px"
-                                                     viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
-                                                     <g>
-                                                     <rect fill="none" height="24" width="24"/>
-                                                     </g>
-                                                     <g>
-                                                     <path
-                                                         d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/>
-                                                     </g>
-                                                 </svg>
-                                                 </button>
-                                             </div>
-                                         </div>
-  
-  
-   
-                                     </div> 
-                                    </div>
-                                               
-                              
-                                  </ng-container>
-                              </ng-container>
-  
-
-
-                           
-
-                            </div>
-
-                            <div   formGroupName="secondaryForm"   class="col-12" *ngIf="AdForm.controls['schedule'].touched && select=='daily'">
-
-                              <div class="row">
-
-  
-                                <div class="col-12">
-                                  <mat-form-field appearance="outline" class="w-100">
-                                    <mat-label>وقت إرسال النوتيفكشن</mat-label>
-                                    <input
-                  
-                                      [ngxTimepicker]="picker4"
-                                      formControlName="time" matInput>
-                                    <ngx-material-timepicker-toggle [for]="picker4" matSuffix></ngx-material-timepicker-toggle>
-                                    <ngx-material-timepicker #picker4 [theme]="darkTheme"></ngx-material-timepicker>
-                                  </mat-form-field>
-                                </div>
-                                  
-
-                                  <mat-form-field appearance="outline" class="w-50">
-                                      <mat-label>تاريخ البدئ الإعلان</mat-label>
-                                      <input (focus)="picker.open()" [matDatepicker]="picker"(dateInput)="fromTo($event.value,'0')"
-                                              formControlName="from" matInput>
-                                      <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
-                                      <mat-datepicker #picker></mat-datepicker>
-                                  </mat-form-field>
-                                  
-
-
-
-                                  <mat-form-field appearance="outline" class="w-50">
-                                      <mat-label>تاريخ انتهاء الإعلان</mat-label>
-                                      <input (focus)="picker2.open()" [matDatepicker]="picker2" (dateInput)="fromTo('0',$event.value)"
-                                              formControlName="to" matInput>
-                                      <mat-datepicker-toggle [for]="picker2" matSuffix></mat-datepicker-toggle>
-                                      <mat-datepicker #picker2></mat-datepicker>
-                                  </mat-form-field>
-
-                                  <div class="col-12">
-                                    <h2 class="tab__title">اختر نوع النوتيفيكشن</h2>
-                                    <mat-radio-group
-                                      [(ngModel)]="isWeb"
-                                      aria-labelledby="example-radio-group-label"
-                                      class="d-flex justify-content-start align-items-start flex-column"
-                                      color="primary"
-                                      formControlName="isWeb">
-                                      <mat-radio-button [value]="1" class="example-radio-button mx-2 my-2">
-                                        ويب سايت
-                                      </mat-radio-button>
-                                      <mat-radio-button [value]="0" class="example-radio-button mx-2 my-2">
-                                        موبيل
-                                      </mat-radio-button>
-                                    </mat-radio-group>
-                                  </div>
-
-  
-                              </div>
-      
-                              <ng-container formArrayName="ads"  >
-                                <ng-container *ngFor="let ad of dailyAdsTest.controls; let i = index">
-                                  <div style="border:  1px solid #198754; padding: 10px; margin-bottom: 15px;">
-                                    <P >{{ad.controls.date.value}} / {{ad.controls.day.value}}</P>
-                                    <div [formGroupName]="i" class="row">
-                                       <mat-form-field appearance="outline" class="col-6">
-                                           <mat-label>العنوان</mat-label>
-                                           <input formControlName="title" matInput
-                                               placeholder="الوصف" type="text"/>
-                                       </mat-form-field>
-
-                                       <mat-form-field appearance="outline" class="col-6">
-                                           <mat-label>الوصف</mat-label>
-                                           <input formControlName="desc" matInput
-                                               placeholder="الوصف" type="text"/>
-                                       </mat-form-field>
-
-
-                                       <div class="col-12 text-center">
-                                         <div *ngIf="AllFiles.length>0" class="row my-2 justify-content-center align-items-start">
-                                           <h4 class="our-text-primary">صورة / فيديو الإعلان</h4>
-                                           <ng-container>
-                        
-                                             <!-- * -->
-                                             <div *ngIf="ad.value.fileSource && ad.value.fileType | appIncludes: 'image/'" class="col-6 col-md-3 my-2">
-                                              <div class="d-flex justify-content-center align-items-center flex-column">
-                                                 <img [src]="ad.value.fileSource" alt="" class="img-fluid" height="175px" width="175px">
-                                                 <button
-                                                 (click)="removeFile(i,'daily')"
-
-                                                   class="mt-2"
-                                                   color="warn"
-                                                   mat-stroked-button
-                                                   type="button">
-                                                   حدف الصورة
-                                                   <mat-icon>delete</mat-icon>
-                                                 </button>
-                                               </div>
-                                             </div>
-                                           </ng-container>
-                                         </div>
-
-                                         
-                                           <div class="custom-file">
-                                               <input
-                                               #fileImage
-                                               (change)="handleFileInput($event, i)"
-                                               formControlName="file"
-                                               accept="image/png,image/jpeg,image/jpg,image/gif,video/mp4,video/x-m4v,video/*"
-                                               aria-describedby="Upload Photo Or Video"
-                                               class="d-none"
-                                               type="file"/>
-                                               <button (click)="fileImage.click()"
-                                                       class="w-50"
-                                                       color="primary"
-                                                       mat-stroked-button
-                                                       type="button">
-                                               رفع صورة او فيديو للإعلان
-                                               <svg enable-background="new 0 0 24 24" fill=" #1f6b00" height="24px"
-                                                   viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
-                                                   <g>
-                                                   <rect fill="none" height="24" width="24"/>
-                                                   </g>
-                                                   <g>
-                                                   <path
-                                                       d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/>
-                                                   </g>
-                                               </svg>
-                                               </button>
-                                           </div>
-                                       </div>
-
-
- 
-                                   </div> 
-                                  </div>
-                                             
-                            
-                                </ng-container>
-                            </ng-container>
-
-
-
-                         
-
-                          </div>  
-
-
-
-
-
-
-
-
-
-
-
-
-
-                          <!-- Test -->
-<!--                           
-                          <div   formGroupName="secondaryForm"   class="col-12" *ngIf=" select=='ss'">
-
-                            <div class="row">
-
-
-                              <div class="col-12">
-                                <mat-form-field appearance="outline" class="w-100">
-                                  <mat-label>وقت إرسال النوتيفكشن</mat-label>
-                                  <input
-                
-                                    [ngxTimepicker]="picker4"
-                                    formControlName="time" matInput>
-                                  <ngx-material-timepicker-toggle [for]="picker4" matSuffix></ngx-material-timepicker-toggle>
-                                  <ngx-material-timepicker #picker4 [theme]="darkTheme"></ngx-material-timepicker>
-                                </mat-form-field>
-                              </div>
-                                
-
-                                <mat-form-field appearance="outline" class="w-50">
-                                    <mat-label>تاريخ البدئ الإعلان</mat-label>
-                                    <input (focus)="picker.open()" [matDatepicker]="picker"(dateInput)="fromTo($event.value,'0')"
-                                            formControlName="from" matInput>
-                                    <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
-                                    <mat-datepicker #picker></mat-datepicker>
-                                </mat-form-field>
-                                
-
-
-
-                                <mat-form-field appearance="outline" class="w-50">
-                                    <mat-label>تاريخ انتهاء الإعلان</mat-label>
-                                    <input (focus)="picker2.open()" [matDatepicker]="picker2" (dateInput)="fromTo('0',$event.value)"
-                                            formControlName="to" matInput>
-                                    <mat-datepicker-toggle [for]="picker2" matSuffix></mat-datepicker-toggle>
-                                    <mat-datepicker #picker2></mat-datepicker>
-                                </mat-form-field>
-
-                                <div class="col-12">
-                                  <h2 class="tab__title">اختر نوع النوتيفيكشن</h2>
-                                  <mat-radio-group
-                                    [(ngModel)]="isWeb"
-                                    aria-labelledby="example-radio-group-label"
-                                    class="d-flex justify-content-start align-items-start flex-column"
-                                    color="primary"
-                                    formControlName="isWeb">
-                                    <mat-radio-button [value]="1" class="example-radio-button mx-2 my-2">
-                                      ويب سايت
-                                    </mat-radio-button>
-                                    <mat-radio-button [value]="0" class="example-radio-button mx-2 my-2">
-                                      موبيل
-                                    </mat-radio-button>
-                                  </mat-radio-group>
-                                </div>
-
-
-                            </div>
-    
-                            <ng-container formArrayName="ads"  >
-                              <ng-container *ngFor="let ad of dailyAdsTest.controls; let i = index">
-                                <div style="border:  1px solid #198754; padding: 10px; margin-bottom: 15px;">
-                                  <P >{{ad.controls.date.value}} / {{ad.controls.day.value}}</P>
-                                  <div [formGroupName]="i" class="row">
-                                     <mat-form-field appearance="outline" class="col-6">
-                                         <mat-label>العنوان</mat-label>
-                                         <input formControlName="title" matInput
-                                             placeholder="الوصف" type="text"/>
-                                     </mat-form-field>
-
-                                     <mat-form-field appearance="outline" class="col-6">
-                                         <mat-label>الوصف</mat-label>
-                                         <input formControlName="desc" matInput
-                                             placeholder="الوصف" type="text"/>
-                                     </mat-form-field>
-
-
-                                     <div class="col-12 text-center">
-                                       <div *ngIf="AllFiles.length>0" class="row my-2 justify-content-center align-items-start">
-                                         <h4 class="our-text-primary">صورة / فيديو الإعلان</h4>
-                                         <ng-container>
-                      
-                                     
-                                           <div *ngIf="ad.value.fileSource && ad.value.fileSource.type | appIncludes: 'image/'" class="col-6 col-md-3 my-2">
-                                            <div class="d-flex justify-content-center align-items-center flex-column">
-                                               <img [src]="ad.value.fileSource.fileSource" alt="" class="img-fluid" height="175px" width="175px">
-                                               <button
-                                               (click)="removeFile(i,'daily')"
-
-                                                 class="mt-2"
-                                                 color="warn"
-                                                 mat-stroked-button
-                                                 type="button">
-                                                 حدف الصورة
-                                                 <mat-icon>delete</mat-icon>
-                                               </button>
-                                             </div>
-                                           </div>
-                                         </ng-container>
-                                       </div>
-
-                                       
-                                         <div class="custom-file">
-                                             <input
-                                             #fileImage
-                                             (change)="handleFileInput($event, i)"
-                                             formControlName="file"
-                                             accept="image/png,image/jpeg,image/jpg,image/gif,video/mp4,video/x-m4v,video/*"
-                                             aria-describedby="Upload Photo Or Video"
-                                             class="d-none"
-                                             type="file"/>
-                                             <button (click)="fileImage.click()"
-                                                     class="w-50"
-                                                     color="primary"
-                                                     mat-stroked-button
-                                                     type="button">
-                                             رفع صورة او فيديو للإعلان
-                                             <svg enable-background="new 0 0 24 24" fill=" #1f6b00" height="24px"
-                                                 viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
-                                                 <g>
-                                                 <rect fill="none" height="24" width="24"/>
-                                                 </g>
-                                                 <g>
-                                                 <path
-                                                     d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/>
-                                                 </g>
-                                             </svg>
-                                             </button>
-                                         </div>
-                                     </div>
-
-
-
-                                 </div> 
-                                </div>
-                                           
-                          
-                              </ng-container>
-                          </ng-container>
-
-
-
-                       
-
-                        </div>   -->
-
-                          <!-- Test -->
-
-
-
-
-
-                              <!-- end of schedule -->    
-                              <div class="col-12 text-center">
-                                <button
-                                 [class.disabled__btn]="AdForm.untouched || dailyAdForm.invalid || loading || AllFiles.length === 0"
-                                  class="auth__btn--submit"
-                                  mat-raised-button
-                                  type="submit">
-                                  إنشاء الإعلان
-                                </button>
-                              </div>           
-                        </form>
+<div class="container my-2">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="page__title">محتوى الإعلان</h1>
+    </div>
+    <div class="col-12">
+      <mat-card>
+        <mat-card-content>
+          <div class="form__container">
+            <form (ngSubmit)="onSubmit()" [formGroup]="createAdForm" dir="rtl">
+              <!--      Title        -->
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>العنوان</mat-label>
+                  <input formControlName="title" matInput
+                         placeholder="العنوان" type="text"/>
+                  <mat-hint *ngIf="createAdForm.controls.title.errors?.required &&createAdForm.controls.title.touched"
+                            align="start">العنوان
+                  </mat-hint>
+                </mat-form-field>
+              </div>
+              <!--      Link        -->
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>لينك الإعلان</mat-label>
+                  <input formControlName="link" matInput
+                         placeholder="لينك الإعلان" type="text"/>
+                  <mat-hint *ngIf="createAdForm.controls.title.errors?.required &&createAdForm.controls.title.touched"
+                            align="start">لينك الإعلان
+                  </mat-hint>
+                </mat-form-field>
+              </div>
+              <!--      END DATE        -->
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>تاريخ انتهاء الإعلان</mat-label>
+                  <input (focus)="picker.open()" [matDatepicker]="picker"
+                         formControlName="end_date" matInput>
+                  <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <!--       desc        -->
+              <div *ngIf="type === 'notification'" class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>وصف الإعلان</mat-label>
+                  <textarea formControlName="desc" matInput placeholder="وصف الإعلان" rows="1"></textarea>
+                </mat-form-field>
+              </div>
+              <!--     Send Time        -->
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>تاريخ إرسال النوتيفكشن</mat-label>
+                  <input
+
+                    [ngxTimepicker]="picker2"
+                    formControlName="send_date" matInput>
+                  <ngx-material-timepicker-toggle [for]="picker2" matSuffix></ngx-material-timepicker-toggle>
+                  <ngx-material-timepicker #picker2 [theme]="darkTheme"></ngx-material-timepicker>
+                </mat-form-field>
+              </div>
+              <!--     Mobile Or Web        -->
+              <div class="col-12">
+                <h2 class="tab__title">اختر نوع النوتيفيكشن</h2>
+                <mat-radio-group
+                  [(ngModel)]="isWeb"
+                  aria-labelledby="example-radio-group-label"
+                  class="d-flex justify-content-start align-items-start flex-column"
+                  color="primary"
+                  formControlName="isWeb">
+                  <mat-radio-button [value]="1" class="example-radio-button mx-2 my-2">
+                    ويب سايت
+                  </mat-radio-button>
+                  <mat-radio-button [value]="0" class="example-radio-button mx-2 my-2">
+                    موبيل
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+              <!--      Ad Media        -->
+              <div class="col-12 text-center">
+                <div *ngIf="AllFiles.length>0" class="row my-2 justify-content-center align-items-start">
+                  <h4 class="our-text-primary">صورة / فيديو الإعلان</h4>
+                  <ng-container *ngFor="let file of AllFiles">
+                    <div *ngIf="file.file?.type | appIncludes: 'video/'" class="col-6 col-md-3 my-2">
+                      <div class="d-flex justify-content-center align-items-center flex-column">
+                        <video controls height="300px" width="300px">
+                          <source [src]="file?.fileResult" type="video/mp4">
+                          <source [src]="file?.fileResult" type="video/ogg">
+                          المتصفح الخاص بك لا يدعم تشغيل الفيديوهات
+                        </video>
+                        <button
+                          (click)="removeImage(file.name)"
+                          class="mt-2" color="warn" mat-stroked-button type="button">
+                          حدف الفيديو
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
                     </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
+                    <div *ngIf="file?.file?.type  | appIncludes: 'image/'" class="col-6 col-md-3 my-2">
+                      <div class="d-flex justify-content-center align-items-center flex-column">
+                        <img [src]="file.fileResult" alt="" class="img-fluid" height="175px" width="175px">
+                        <button
+                          (click)="removeImage(file.name)"
+                          class="mt-2"
+                          color="warn"
+                          mat-stroked-button
+                          type="button">
+                          حدف الصورة
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="custom-file my-5">
+                  <input
+                    #fileImage
+                    (change)="handleFileInput($event)"
+                    accept="image/png,image/jpeg,image/jpg,image/gif,video/mp4,video/x-m4v,video/*"
+                    aria-describedby="Upload Photo Or Video"
+                    class="d-none"
+                    type="file"/>
+                  <button (click)="fileImage.click()"
+                          class="w-50"
+                          color="primary"
+                          mat-stroked-button
+                          type="button">
+                    رفع صورة او فيديو للإعلان
+                    <svg enable-background="new 0 0 24 24" fill=" #1f6b00" height="24px"
+                         viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
+                      <g>
+                        <rect fill="none" height="24" width="24"/>
+                      </g>
+                      <g>
+                        <path
+                          d="M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z"/>
+                      </g>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <!--      Actions        -->
+              <div class="col-12 text-center">
+                <button
+                  [class.disabled__btn]="createAdForm.untouched || createAdForm.invalid || loading || AllFiles.length === 0"
+                  [class.spinner]="loading"
+                  [disabled]="createAdForm.untouched || createAdForm.invalid || loading ||  AllFiles.length === 0"
+                  [ngStyle]="{'cursor':createAdForm.untouched|| createAdForm.invalid || loading ? 'not-allowed':'pointer'  }"
+                  class="auth__btn--submit"
+                  mat-raised-button
+                  type="submit">
+                  إنشاء الإعلان
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
 
-  
 
-  <ng-template #image>
-
-  </ng-template>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
 

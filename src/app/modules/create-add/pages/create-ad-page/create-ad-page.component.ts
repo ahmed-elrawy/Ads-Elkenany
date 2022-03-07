@@ -85,14 +85,22 @@ export class CreateAdPageComponent implements OnInit {
           break;
         }
       }
-      if (this.selectedType === AdsType.popup || this.selectedType === AdsType.notification) {
+      if (this.selectedType === AdsType.popup) { // || this.selectedType === AdsType.notification
         this.router.navigate(['/create-ad/path-two'], {
           queryParams: {
             company: this.selectedCompany,
             type: this.selectedType
           }
         }).then();
+      }else if( this.selectedType === AdsType.notification){
+        this.router.navigate(['/create-ad/notification'], {
+          queryParams: {
+            company: this.selectedCompany,
+            type: this.selectedType
+          }
+        }).then();
       }
+
       if (this.selectedType === AdsType.banner || this.selectedType === AdsType.logo || this.selectedType === AdsType.sort) {
         this.router.navigate(['/create-ad/path-one'], {
           queryParams: {
