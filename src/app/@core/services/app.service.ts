@@ -50,7 +50,7 @@ export class AppService {
 
   ////////////for test 
 
-  CreateAdTest(formData: FormData): Observable<ApiResponse<CreateAdResponse>> {
+  CreateAdNotification(formData: FormData): Observable<ApiResponse<CreateAdResponse>> {
     return this.http.post(`${env.ApiUrl}/ads/notification-create`, formData);
   }
 

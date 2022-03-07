@@ -518,7 +518,7 @@ export class NotificationComponent implements OnInit {
       console.log(index + '   ' + item);
     });
     this.loading = true;
-    this.appService.CreateAdTest(formData).subscribe((res) => {
+    this.appService.CreateAdNotification(formData).subscribe((res) => {
       console.log(res);
       this.loading = false;
       this.toasterService.showSuccess('تم انشاء الاعلان بنجاح');

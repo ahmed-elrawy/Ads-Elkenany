@@ -6,7 +6,7 @@ import { EnvConfig } from './env-config.interface';
 
 export const environment: EnvConfig = {
   production: false,
-  ApiUrl: 'https://test.elkenany.com/api',
+  ApiUrl: 'https://elkenany.com/api',
 };
 
 /*
