@@ -403,7 +403,6 @@ export class NotificationComponent implements OnInit {
             } else if(this.select == "custom") {
               this.batchesCustomAds(index).controls['fileSource'].patchValue( reader.result)
               this.batchesCustomAds(index).controls['fileType'].patchValue( file.type)
-              console.log(             this.customAdstest.controls                )
             } else if(this.select == "daily") {
               this.batchesDailyAds(index).controls['fileSource'].patchValue( reader.result)
               this.batchesDailyAds(index).controls['fileType'].patchValue( file.type)
@@ -418,7 +417,6 @@ export class NotificationComponent implements OnInit {
         };
       }
     }
-    console.log( this.dailyAdsTest.controls)
   }
   removeFile(index:  number, type:string ): void {
     if(type == 'daily'){
@@ -461,7 +459,6 @@ export class NotificationComponent implements OnInit {
   onSubmit(): void {
     const formData: FormData = new FormData();
     // console.log(this.AdForm.valid)
-    console.log(this.secondaryForm.valid)
 
     // if (this.secondaryForm.valid) {
     //   alert('Form Submitted succesfully!!!\n Check the values in browser console.');
@@ -508,8 +505,8 @@ export class NotificationComponent implements OnInit {
 
     formData.append('type', this.select);
     formData.append('app', this.isWeb === true ? 'web' : 'mop');
-     formData.append('data',JSON.stringify( data.data));
-     console.log(Object.assign({}, data.data))
+    formData.append('data',JSON.stringify( data.data));
+    // console.log(Object.assign({}, data.data))
     formData.append('company_id',this.company + '');
     // formData.append('type', this.type);
 
