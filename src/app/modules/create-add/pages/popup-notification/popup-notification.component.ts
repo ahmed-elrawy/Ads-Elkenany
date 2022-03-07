@@ -462,6 +462,10 @@ export class PopupNotificationComponent implements OnInit {
     const formData: FormData = new FormData();
     // console.log(this.AdForm.valid)
     console.log(this.secondaryForm.valid)
+
+    if (this.secondaryForm.valid) {
+      alert('Form Submitted succesfully!!!\n Check the values in browser console.');
+    }
     let data: APiData ={type:'',data:[],  isWeb:this.isWeb}
     let user = {
       company_id: this.company,
