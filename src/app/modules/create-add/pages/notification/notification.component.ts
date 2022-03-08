@@ -11,7 +11,7 @@ import { take } from 'rxjs/operators';
 
 interface APiData{
   type:string;
-  isWeb:boolean
+  isWeb:number
 
   data: {
     title:string;
@@ -41,7 +41,7 @@ interface FileInterface {
   styleUrls: ['./notification.component.scss']
 })
 export class NotificationComponent implements OnInit {
-  
+
   darkTheme: NgxMaterialTimepickerTheme = {
     container: {
       bodyBackgroundColor: '#424242',
@@ -64,7 +64,7 @@ export class NotificationComponent implements OnInit {
   company = 0;
   loading = false;
   createAdForm!: FormGroup;
-  isWeb = true; //  1 = web - 0 mobile
+  isWeb = 1; //  1 = web - 0 mobile
   time = '';
 
 
@@ -92,7 +92,7 @@ export class NotificationComponent implements OnInit {
   select="now"
       // new
   weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  
+
   constructor(
     private appService: AppService,
     private router: Router,
@@ -102,7 +102,7 @@ export class NotificationComponent implements OnInit {
     public datePipe: DatePipe,
     ) {
   }
-    
+
   ngOnInit(): void {
     this.route.queryParams.pipe(
       take(1),
@@ -150,7 +150,11 @@ export class NotificationComponent implements OnInit {
       desc: ['',[Validators.required]],
       file:['',],
       isWeb: ['', []],
-    })
+      startDate: [''],
+      endDate: ['']
+    }, {validator: this.checkDates})
+
+    
 
 ///////////////////////////////////TEST
   this.test = this.fb.group({
@@ -174,7 +178,7 @@ export class NotificationComponent implements OnInit {
 
   createAdsTest(ads:any){
     this.testAds.clear()
-    
+
     for(let i=0; i < ads.length ; i++) {
 
       this.testAds.push(
@@ -213,6 +217,7 @@ export class NotificationComponent implements OnInit {
     this.to = ''
     this.secondaryForm.reset()
     this.select= value
+    this.isWeb=1
     this.AdForm.controls["secondaryForm"] =  new FormGroup({})
     this.AllFiles = [];
 
@@ -263,7 +268,7 @@ export class NotificationComponent implements OnInit {
 
   createAdsDaily(ads:any){
     this.dailyAds.clear()
-    
+
     for(let i=0; i < ads.length ; i++) {
 
       // this.ads.push(this.AdsForm);
@@ -295,18 +300,18 @@ export class NotificationComponent implements OnInit {
 
 
     let selectedDays: {date:string, day:string}[]=[]
-    
+
     let from_to_days = this.getDaysArray(new Date(this.from),new Date(this.to))
-    
+
     if(this.from && this.to && this.select=="custom") {
 
       from_to_days.forEach( (e:any, i:any) => {
 
         var d = new Date(e);
 
-     
 
-        
+
+
         // var dayName = weekday[d.getDay()];
         var dayName = this.weekday[d.getDay()]
 
@@ -326,10 +331,10 @@ export class NotificationComponent implements OnInit {
 
 
     }else if (this.from && this.to && this.select=="daily"){
-      var date1 = new Date(this.from); 
-      var date2 = new Date(this.to); 
+      var date1 = new Date(this.from);
+      var date2 = new Date(this.to);
 
-      var Time = date2.getTime() - date1.getTime(); 
+      var Time = date2.getTime() - date1.getTime();
       var Days = Time / (1000 * 3600 * 24);
 
       from_to_days.forEach( (e:any, i:any) => {
@@ -338,7 +343,7 @@ export class NotificationComponent implements OnInit {
         selectedDays.push({"date":e, "day":dayName})
       })
 
-      
+
       this.createAdsDaily(selectedDays)
 
     }
@@ -352,7 +357,7 @@ export class NotificationComponent implements OnInit {
     //   console.log(selectedDays)
     // }
 
-  
+
 
   }
 
@@ -368,7 +373,7 @@ export class NotificationComponent implements OnInit {
   };
 
 
- 
+
 
   getCustomAds(): FormArray {return  this.customAdForm.get("ads") as FormArray}
   getDailyAds(): FormArray {return  this.dailyAdForm.get("ads") as FormArray}
@@ -391,15 +396,15 @@ export class NotificationComponent implements OnInit {
           this.toasterService.loading('جارى رفع الملفات...');
            this.AllFiles = [];
             this.AllFiles.push({fileResult: reader.result, file, name: file.name, id:index});
- 
+
 
             let fileSource ={
               fileSource: reader.result,
-              type: file.type 
+              type: file.type
             }
-     
+
             if(this.select == "now" || "schedule" && this.secondaryForm.controls['file']) {
-               this.secondaryForm.controls['file'].patchValue( reader.result) 
+               this.secondaryForm.controls['file'].patchValue( reader.result)
             } else if(this.select == "custom") {
               this.batchesCustomAds(index).controls['fileSource'].patchValue( reader.result)
               this.batchesCustomAds(index).controls['fileType'].patchValue( file.type)
@@ -408,9 +413,9 @@ export class NotificationComponent implements OnInit {
               this.batchesDailyAds(index).controls['fileType'].patchValue( file.type)
 
 
-            } 
-          
-    
+            }
+
+
         };
         reader.onloadend = (ee) => {
            this.toasterService.stopLoading();
@@ -430,7 +435,7 @@ export class NotificationComponent implements OnInit {
     this.AllFiles = this.AllFiles.filter((image) => {
       return image.name !== name;
     });
-    
+
   }
 
 
@@ -454,12 +459,17 @@ export class NotificationComponent implements OnInit {
     }
   }
 
-
+  checkDates(group: FormGroup) {
+    if(group.controls.endDate.value < group.controls.startDate.value) {
+      return { notValid:true }
+    }
+    return null;
+  }
 
   onSubmit(): void {
     const formData: FormData = new FormData();
     // console.log(this.AdForm.valid)
-
+    console.log(this.isWeb)
     // if (this.secondaryForm.valid) {
     //   alert('Form Submitted succesfully!!!\n Check the values in browser console.');
     // }
@@ -486,7 +496,7 @@ export class NotificationComponent implements OnInit {
         date: this.secondaryForm.controls.date.value ,
         time: this.secondaryForm.controls.time.value
       })
-     
+
 
     } else if (this.select== "custom" ||this.select== "daily" ) {
       let ads =[]
@@ -504,30 +514,35 @@ export class NotificationComponent implements OnInit {
     }
 
     formData.append('type', this.select);
-    formData.append('app', this.isWeb === true ? 'web' : 'mop');
+    formData.append('app', this.isWeb === 1 ? 'web' : 'mop');
     formData.append('data',JSON.stringify( data.data));
     // console.log(Object.assign({}, data.data))
     formData.append('company_id',this.company + '');
     // formData.append('type', this.type);
 
 
-    formData.forEach((item, index) => {
-      console.log(index + '   ' + item);
-    });
+    // formData.forEach((item, index) => {
+    //   console.log(index + '   ' + item);
+    // });
     this.loading = true;
-    this.appService.CreateAdNotification(formData).subscribe((res) => {
-      console.log(res);
-      this.loading = false;
-      this.toasterService.showSuccess('تم انشاء الاعلان بنجاح');
-      this.router.navigate(['/my-account'], {
-        queryParams: {company_id: this.company, is_outside: true}
-      }).then();
-    }, (error) => {
-      console.log(error);
-      this.loading = false;
-      this.toasterService.showFail(error.error.error);
-      // this.errorHandler.HandelAuthErrors(error.error.errors, error.status, error.message);
-    });
+
+    // if(this.secondaryForm.valid) {
+    //   this.appService.CreateAdNotification(formData).subscribe((res) => {
+    //     console.log(res);
+    //     this.loading = false;
+    //     this.toasterService.showSuccess('تم انشاء الاعلان بنجاح');
+    //     this.router.navigate(['/my-account'], {
+    //       queryParams: {company_id: this.company, is_outside: true}
+    //     }).then();
+    //   }, (error) => {
+    //     console.log(error);
+    //     this.loading = false;
+    //     this.toasterService.showFail(error.error.error);
+    //     // this.errorHandler.HandelAuthErrors(error.error.errors, error.status, error.message);
+    //   });
+    // }else  this.toasterService.showFail('يجب اكمال البيانات ');
+
+
   }
 }
 
